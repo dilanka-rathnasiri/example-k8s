@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-dilanka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-dilanka
+  template:
+    metadata:
+      labels:
+        app: hello-dilanka
+    spec:
+      containers:
+        - name: hello-dilanka
+          image: dilankarathnasiri/simple-k8s:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: "SERVICE_NAME"
+              value: "dilanka"
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "256m"
+            limits:
+              memory: "256Mi"
+              cpu: "512m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-dilanka
+spec:
+  selector:
+    app: hello-dilanka
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
